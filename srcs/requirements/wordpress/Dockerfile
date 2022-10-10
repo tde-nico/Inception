@@ -8,3 +8,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
 
 
 EXPOSE 9000
+
+COPY ./run.sh /tmp/run.sh
+
+ENTRYPOINT [ "sh", "/tmp/run.sh" ]

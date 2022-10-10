@@ -1,5 +1,7 @@
 NAME	= inception
-YML		= srcs/docker-compose.yml
+SRC_DIR	= srcs
+ENV		= $(SRC_DIR)/.env
+YML		= $(SRC_DIR)/docker-compose.yml
 USER	= tde-nico
 
 IMAGES	= $(shell sudo docker images -qa)
@@ -11,20 +13,25 @@ host:
 	@ echo "127.0.0.1 $(USER).42.fr" >> /etc/hosts
 
 start:
-	@ docker-compose -f $(YML) up
+	@ sudo docker-compose --env-file $(ENV) -f $(YML) up
 
 stop:
-	@ docker-compose -f $(YML) down
+	@ sudo docker-compose --env-file $(ENV) -f $(YML) down
 
 clean: stop
 
 fclean: clean
-	@ sudo docker rmi -f $(IMAGES)
+#	@ sudo docker rmi -f $(IMAGES)
 	@ sudo docker volume rm $(VOLUMES)
-	@ docker system prune -a -f
+	@ sudo docker system prune -a -f
 
 re: fclean
-	@ docker-compose -f $(YML) up --build
+	@ sudo docker-compose --env-file $(ENV) -f $(YML) up --build
+	
+reload:
+	@ sudo docker-compose --env-file $(ENV) -f $(YML) up --build
 
+tar:
+	@ tar -cf ../$(NAME).tar .
 
 .PHONY: all start stop clean fclean re host
