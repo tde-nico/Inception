@@ -12,6 +12,8 @@ Docker
 
 -->
 
+### This is an experimental guide! I am not really sure if what is wrote here is corerrect so, do not completly rely on this!!
+
 ## Table of Contents
 1. [Introduction](#introduction)
     - [What is Docker?](#Docker)
@@ -71,15 +73,15 @@ inception
         ├── mariadb
         │   ├── Dockerfile
         │   └── conf
-        │       ├── configure.sh
+        │       └── configure.sh
         ├── nginx
         │   ├── Dockerfile
         │   └── conf
-        │       ├── configure.sh
+        │       └── configure.sh
         └── wordpress
             ├── Dockerfile
             └── conf
-                ├── configure.sh
+                └── configure.sh
 ```
 
 To finish the setup we can write a simple Makefile.
@@ -714,7 +716,7 @@ nginx -g "daemon off;";
 </details>
 
 ## End
-Now running make and after typing the root password we should see the containers's creation process, after the deploy we can go to "https://localhost" or "localhost:443" to access the site where we should see the wordpress configuration page
+Now running "make" and after typing the root password we should see the containers's creation process, after the deploy we can go to "https://localhost" or "localhost:443" to access the site where we should see the wordpress configuration page
 
 ## Thanks for the attention
 I hope that this weird tutorial can be useful for your projects.
