@@ -381,9 +381,107 @@ COPY ./conf/configure.sh /configure.sh
 CMD [ "sh", "/configure.sh" ]
 ```
 
+So, the "50-server.cnf" is the default file that is present with mariadb but with the bind address commented or removed.
+(this line):
+```
+bind-address            = 0.0.0.0
+```
+And the query cache limit as the same of the previous:
+```
+#query_cache_limit      = 1M
+```
 
+Next we have the "createdb.sql" that only contains some instruction to create the database.
+At the first line we create the database.
+```
+CREATE DATABASE ${DB_NAME};
+```
+We now can add the user and his password.
+```
+CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+```
+Then we grant him the privileges.
+```
+GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
+```
+And we flush them.
+```
+FLUSH PRIVILEGES;
+```
+At the end we now can update the root user:
+```
+UPDATE mysql.user
+    SET authentication_string = PASSWORD('${MYSQL_ROOT_PWD}'), password_expired = 'N'
+    WHERE User = 'root' AND Host = 'localhost';
+FLUSH PRIVILEGES;
+```
 
+./srcs/requirements/mariadb/conf/createdb.sql
+```
+CREATE DATABASE ${DB_NAME};
+CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
+FLUSH PRIVILEGES;
 
+UPDATE mysql.user
+    SET authentication_string = PASSWORD('${MYSQL_ROOT_PWD}'), password_expired = 'N'
+    WHERE User = 'root' AND Host = 'localhost';
+FLUSH PRIVILEGES;
+```
+
+Now the only file missing is the "configure.sh", where we initialy check if the "createdb.sql" exists, so we can create the database, by replacing the env variables and setting the right permissions on files and then really creating the database:
+```
+if [ -f /createdb.sql ]; then
+	# Set env
+	sed -i -e "s/\${DB_USER}/${DB_USER}/g" /createdb.sql;
+	sed -i -e "s/\${DB_PASSWORD}/${DB_PASSWORD}/g" /createdb.sql;
+	sed -i -e "s/\${DB_NAME}/${DB_NAME}/g" /createdb.sql;
+	sed -i -e "s/\${MYSQL_ROOT_PWD}/${MYSQL_ROOT_PWD}/g" /createdb.sql;
+
+	# Set no writing permissions
+	chmod 0444 /etc/mysql/mariadb.conf.d/50-server.cnf;
+
+	# Create the Database
+	service mysql start 2> /dev/null 1> /dev/nul \
+	&& mysql < /createdb.sql 2> /dev/null 1> /dev/nul \
+	&& service mysql stop 2> /dev/null 1> /dev/null;
+
+	# Remove the database creation file
+	rm -f /createdb.sql;
+fi
+```
+
+In the end we can put the real entrypoint:
+```
+/usr/bin/mysqld_safe;
+```
+
+./srcs/requirements/mariadb/conf/configure.sh
+```
+#!/bin/bash
+
+if [ -f /createdb.sql ]; then
+	# Set env
+	sed -i -e "s/\${DB_USER}/${DB_USER}/g" /createdb.sql;
+	sed -i -e "s/\${DB_PASSWORD}/${DB_PASSWORD}/g" /createdb.sql;
+	sed -i -e "s/\${DB_NAME}/${DB_NAME}/g" /createdb.sql;
+	sed -i -e "s/\${MYSQL_ROOT_PWD}/${MYSQL_ROOT_PWD}/g" /createdb.sql;
+
+	# Set no writing permissions
+	chmod 0444 /etc/mysql/mariadb.conf.d/50-server.cnf;
+
+	# Create the Database
+	service mysql start 2> /dev/null 1> /dev/nul \
+	&& mysql < /createdb.sql 2> /dev/null 1> /dev/nul \
+	&& service mysql stop 2> /dev/null 1> /dev/null;
+
+	# Remove the database creation file
+	rm -f /createdb.sql;
+fi
+
+# Entrypoint
+/usr/bin/mysqld_safe;
+```
 
 </details>
 
