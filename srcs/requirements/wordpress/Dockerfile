@@ -10,6 +10,8 @@ RUN cd /var/www && tar -xzvf wordpress-5.7.2-it_IT.tar.gz
 RUN rm -f /var/www/wordpress-5.7.2-it_IT.tar.gz
 RUN rm -f /var/www/wordpress/wp-config-sample.php
 COPY ./conf/wp-config.php ./var/www/wordpress/
+COPY ./conf/configure.sh /tmp/configure.sh
+RUN sh /tmp/configure.sh
 
 RUN mkdir ./run/php/
 CMD ./usr/sbin/php-fpm7.3 -F
