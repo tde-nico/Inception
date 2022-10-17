@@ -9,4 +9,4 @@ sed -i -e "s/\${DB_PASSWORD}/kali/g" /createdb.sql;
 sed -i -e "s/\${DB_NAME}/wordpress/g" /createdb.sql;
 sed -i -e "s/\${MYSQL_ROOT_PWD}/kali/g" /createdb.sql;
 
-
+chmod 0444 /etc/mysql/mariadb.conf.d/50-server.cnf

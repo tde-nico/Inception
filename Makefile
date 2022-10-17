@@ -32,7 +32,7 @@ clean: stop
 
 clean_mac:
 	@ find . -name "*._*" -delete
-	@ find . -name "*._DS_Store" -delete
+	@ find . -name "*.DS_Store" -delete
 
 fclean: clean vol_clean dir_clean
 #	@ sudo docker rmi -f $(IMAGES)
@@ -44,10 +44,10 @@ vol_clean:
 	@ sudo docker volume rm $(VOLUMES)
 
 dir_clean:
-	@ $(RM) ~/Desktop/data
-	@ $(MD) ~/Desktop/data
-	@ $(MD) ~/Desktop/data/mariadb
-	@ $(MD) ~/Desktop/data/wordpress
+	@ $(RM) /home/$(USER)/data
+	@ $(MD) /home/$(USER)/data
+	@ $(MD) /home/$(USER)/data/mariadb
+	@ $(MD) /home/$(USER)/data/wordpress
 
 
 
