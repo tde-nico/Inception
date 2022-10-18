@@ -6,7 +6,7 @@ USER	= tde-nico
 
 DC		= sudo docker-compose
 RM		= sudo rm -rf
-MD		= mkdir -p
+MD		= sudo mkdir -p
 
 IMAGES	= $(shell sudo docker images -qa)
 VOLUMES	= $(shell sudo docker volume ls -q)
