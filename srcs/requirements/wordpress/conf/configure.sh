@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# Set Env
-sed -i -e "s/\${DB_NAME}/wordpress/g" /var/www/wordpress/wp-config.php;
-sed -i -e "s/\${DB_USER}/tde-nico/g" /var/www/wordpress/wp-config.php;
-sed -i -e "s/\${DB_PASSWORD}/kali/g" /var/www/wordpress/wp-config.php;
-sed -i -e "s/\${DB_HOST}/mariadb/g" /var/www/wordpress/wp-config.php;
+if [ -f /tmp/switch.tmp ]; then
+	# Set Env
+	sed -i -e "s/\${DB_NAME}/${DB_NAME}/g" /var/www/wordpress/wp-config.php;
+	sed -i -e "s/\${DB_USER}/${DB_USER}/g" /var/www/wordpress/wp-config.php;
+	sed -i -e "s/\${DB_PASSWORD}/${DB_PASSWORD}/g" /var/www/wordpress/wp-config.php;
+	sed -i -e "s/\${DB_HOST}/${DB_HOST}/g" /var/www/wordpress/wp-config.php;
 
+	# Create the php folder
+	mkdir -p ./run/php/;
+fi
+
+# Entrypoint
+/usr/sbin/php-fpm7.3 -F;

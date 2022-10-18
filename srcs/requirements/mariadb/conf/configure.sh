@@ -21,4 +21,4 @@ if [ -f /createdb.sql ]; then
 fi
 
 # Entrypoint
-exec "/usr/bin/mysqld_safe";
+/usr/bin/mysqld_safe;
