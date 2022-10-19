@@ -9,6 +9,10 @@ if [ -f /tmp/switch.tmp ]; then
 
 	# Create the php folder
 	mkdir -p ./run/php/;
+
+	# Remove the switch
+	rm -f /tmp/switch.tmp;
+
 fi
 
 # Entrypoint
