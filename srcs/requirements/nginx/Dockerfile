@@ -9,7 +9,7 @@ RUN mkdir /etc/nginx/ssl
 RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
 	-out /etc/nginx/ssl/nginx.pem \
 	-keyout /etc/nginx/ssl/nginx.key \
-	-subj "/C=IT/ST=Rome/L=Rome/O=42 School/OU=tde-nico/CN=tde-nico/"
+	-subj "/C=IT/ST=Rome/L=Rome/O=42/OU=tde-nico/CN=tde-nico.42.fr/emailAddress=tde-nico@student.42roma.it/"
 
 # nginx config
 RUN mkdir -p /run/nginx
