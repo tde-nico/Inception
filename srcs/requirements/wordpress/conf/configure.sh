@@ -8,15 +8,17 @@ done
 
 if [ ! -f "/var/www/html/index.html" ]; then
 
-	echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-	echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-
 	# static website
 	mv /tmp/index.html /var/www/html/index.html
 
+	# DNS fix
+	echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+	echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
 	# Adminer
-	wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-mysql-en.php -O /var/www/html/adminer.php &> /dev/null
-	wget https://raw.githubusercontent.com/Niyko/Hydra-Dark-Theme-for-Adminer/master/adminer.css -O /var/www/html/adminer.css &> /dev/null
+	wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-mysql-en.php -O /var/www/html/adminer.php #&> /dev/null
+	wget https://raw.githubusercontent.com/Niyko/Hydra-Dark-Theme-for-Adminer/master/adminer.css -O /var/www/html/adminer.css #&> /dev/null
+
 
 	# Wordpress
 	wp core download --allow-root
